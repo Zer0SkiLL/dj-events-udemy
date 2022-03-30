@@ -1,12 +1,11 @@
+import React from 'react';
 import Layout from '../components/Layout';
 
-import Link from 'next/link';
-
-export default function Home() {
+export default function About() {
     return (
         <div>
             <Layout>
-                <h1>Home</h1>
+                <h1>About</h1>
             </Layout>
         </div>
     );
