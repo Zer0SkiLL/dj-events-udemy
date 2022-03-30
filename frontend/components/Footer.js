@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/dist/client/link';
 
-import styles from '../styles/Footer.module.css';
+import styles from '@/styles/Footer.module.css';
 
 export default function Footer() {
     return (
