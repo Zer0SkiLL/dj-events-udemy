@@ -2,21 +2,45 @@ import React from 'react';
 import Layout from '@/components/Layout';
 import { API_URL } from '@/config/index';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 import styles from '@/styles/Event.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-export default function EventsDetailPage({ evt }) {
-    const deleteEvent = (e) => {
-        console.log('delete');
+export default function EventsDetailPage({ evt, id }) {
+    const router = useRouter();
+
+    console.log(evt, id);
+
+    const deleteEvent = async (e) => {
+        if (confirm('Are you sure?')) {
+            const res = await fetch(`${API_URL}/api/events/${id}`, {
+                method: 'DELETE',
+            });
+
+            console.log(res);
+
+            const data = await res.json();
+
+            console.log(data);
+
+            if (!res.ok) {
+                toast.error(`Error:${data.error.message}`);
+            } else {
+                router.push('/events');
+            }
+        }
     };
     return (
         <div>
             <Layout>
                 <div className={styles.event}>
                     <div className={styles.controls}>
-                        <Link href={`/events/edit/${evt.id}`}>
+                        <Link href={`/events/edit/${id}`}>
                             <a>
                                 <FaPencilAlt></FaPencilAlt>Edit Event
                             </a>
@@ -35,6 +59,7 @@ export default function EventsDetailPage({ evt }) {
                         {evt.time}
                     </span>
                     <h1>{evt.name}</h1>
+                    <ToastContainer position="bottom-right"></ToastContainer>
                     {evt.image.data && (
                         <div className={styles.image}>
                             <Image
@@ -74,6 +99,7 @@ export async function getServerSideProps({ query: { slug } }) {
     return {
         props: {
             evt: events[0].attributes,
+            id: events[0].id,
         },
     };
 }
