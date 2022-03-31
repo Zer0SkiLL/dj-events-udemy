@@ -40,14 +40,17 @@ export default function AddEventPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify({ data: values }),
             });
 
             if (!res.ok) {
-                toast.error('Something went wrong with posting to strapi');
+                toast.error(
+                    'Something went wrong with posting to strapi. detail in console'
+                );
+                console.log(res.statusText);
             } else {
                 const data = await res.json();
-                const evt = data.data;
+                const evt = data.data.attributes;
 
                 router.push(`/events/${evt.slug}`);
             }
@@ -64,7 +67,7 @@ export default function AddEventPage() {
             <Layout title="Add New Event">
                 <Link href="/events">Go Back</Link>
                 <h1>Add Event</h1>
-                <ToastContainer></ToastContainer>
+                <ToastContainer position="bottom-right"></ToastContainer>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.grid}>

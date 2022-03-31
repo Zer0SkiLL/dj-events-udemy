@@ -35,7 +35,7 @@ export default function EventsDetailPage({ evt }) {
                         {evt.time}
                     </span>
                     <h1>{evt.name}</h1>
-                    {evt.image && (
+                    {evt.image.data && (
                         <div className={styles.image}>
                             <Image
                                 src={
@@ -65,7 +65,9 @@ export default function EventsDetailPage({ evt }) {
 }
 
 export async function getServerSideProps({ query: { slug } }) {
-    const res = await fetch(`${API_URL}/api/events/?slug=${slug}&populate=*`);
+    const res = await fetch(
+        `${API_URL}/api/events/?filters[slug][$eq]=${slug}&populate=*`
+    );
     const json = await res.json();
     const events = json.data;
 
