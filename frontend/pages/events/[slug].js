@@ -31,12 +31,20 @@ export default function EventsDetailPage({ evt }) {
                     </div>
 
                     <span>
-                        {evt.date} at {evt.time}
+                        {new Date(evt.date).toLocaleDateString('de-CH')} at{' '}
+                        {evt.time}
                     </span>
                     <h1>{evt.name}</h1>
                     {evt.image && (
                         <div className={styles.image}>
-                            <Image src={evt.image} width={960} height={600} />
+                            <Image
+                                src={
+                                    evt.image.data.attributes.formats.medium.url
+                                }
+                                width={960}
+                                height={600}
+                                alt="event image"
+                            />
                         </div>
                     )}
 
@@ -57,11 +65,13 @@ export default function EventsDetailPage({ evt }) {
 }
 
 export async function getServerSideProps({ query: { slug } }) {
-    const res = await fetch(`${API_URL}/api/events/${slug}`);
-    const events = await res.json();
+    const res = await fetch(`${API_URL}/api/events/?slug=${slug}&populate=*`);
+    const json = await res.json();
+    const events = json.data;
+
     return {
         props: {
-            evt: events[0],
+            evt: events[0].attributes,
         },
     };
 }
