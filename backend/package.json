@@ -9,12 +9,15 @@
     "build": "strapi build",
     "strapi": "strapi"
   },
-  "devDependencies": {},
   "dependencies": {
-    "@strapi/strapi": "4.1.6",
-    "@strapi/plugin-users-permissions": "4.1.6",
     "@strapi/plugin-i18n": "4.1.6",
-    "better-sqlite3": "^7.5.0"
+    "@strapi/plugin-users-permissions": "4.1.6",
+    "@strapi/provider-upload-cloudinary": "^4.1.6",
+    "@strapi/strapi": "4.1.6",
+    "better-sqlite3": "^7.5.0",
+    "sequelize": "^6.17.0",
+    "strapi-provider-upload-cloudinary": "^3.5.4",
+    "uuid": "^8.3.2"
   },
   "author": {
     "name": "A Strapi developer"
