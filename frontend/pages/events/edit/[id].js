@@ -8,6 +8,7 @@ import { FaImage } from 'react-icons/fa';
 
 import { API_URL } from '@/config/index';
 import Layout from '@/components/Layout';
+import Modal from '@/components/Modal';
 
 import styles from '@/styles/Form.module.css';
 import Image from 'next/image';
@@ -27,6 +28,8 @@ export default function EditEventPage({ evt, id }) {
     const [imagePreview, setImagePreview] = useState(
         evt.image.data ? evt.image.data.attributes.formats.thumbnail.url : null
     );
+
+    const [showModal, setShowModal] = useState(false);
 
     const router = useRouter();
 
@@ -169,10 +172,17 @@ export default function EditEventPage({ evt, id }) {
                 )}
 
                 <div>
-                    <button className="btn-secondary">
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="btn-secondary"
+                    >
                         <FaImage></FaImage> Set Image
                     </button>
                 </div>
+
+                <Modal show={showModal} onClose={() => setShowModal(false)}>
+                    IMAGE UPLOAD
+                </Modal>
             </Layout>
         </div>
     );
