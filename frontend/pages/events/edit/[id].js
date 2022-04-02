@@ -10,6 +10,7 @@ import { API_URL } from '@/config/index';
 import Layout from '@/components/Layout';
 import Modal from '@/components/Modal';
 import ImageUpload from '@/components/ImageUpload';
+import Loading from '@/components/Loading';
 
 import styles from '@/styles/Form.module.css';
 import Image from 'next/image';
@@ -31,6 +32,8 @@ export default function EditEventPage({ evt, id }) {
 
     const [showModal, setShowModal] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const router = useRouter();
 
     const handleSubmit = async (e) => {
@@ -46,6 +49,8 @@ export default function EditEventPage({ evt, id }) {
             }
         }
         if (valid) {
+            setIsLoading(true);
+
             const res = await fetch(`${API_URL}/api/events/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -55,11 +60,13 @@ export default function EditEventPage({ evt, id }) {
             });
 
             if (!res.ok) {
+                setIsLoading(false);
                 toast.error(
                     'Something went wrong with posting to strapi. detail in console'
                 );
                 console.log(res.statusText);
             } else {
+                setIsLoading(false);
                 const data = await res.json();
                 const evt = data.data.attributes;
 
@@ -87,6 +94,7 @@ export default function EditEventPage({ evt, id }) {
     return (
         <div>
             <Layout title="Add New Event">
+                {isLoading && <Loading></Loading>}
                 <Link href="/events">Go Back</Link>
                 <h1>Edit Event</h1>
                 <ToastContainer position="bottom-right"></ToastContainer>

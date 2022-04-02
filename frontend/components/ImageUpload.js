@@ -1,14 +1,20 @@
 import { React, useState } from 'react';
-// import { API_URL } from '@/config/index';
 
 import styles from '@/styles/Form.module.css';
 import { API_URL } from '../config';
 
+import Loading from '@/components/Loading';
+
 export default function ImageUpload({ evtId, imageUploaded }) {
     const [image, setImage] = useState(null);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setIsLoading(true);
+
         const formData = new FormData();
         formData.append('files', image);
         formData.append('ref', 'api::event.event');
@@ -23,6 +29,7 @@ export default function ImageUpload({ evtId, imageUploaded }) {
         if (res.ok) {
             imageUploaded();
         }
+        setIsLoading(false);
     };
 
     const handleFileChange = (e) => {
@@ -31,6 +38,7 @@ export default function ImageUpload({ evtId, imageUploaded }) {
 
     return (
         <div>
+            {isLoading && <Loading></Loading>}
             <div className={styles.form}>
                 <h1>Upload EventImage</h1>
                 <form onSubmit={handleSubmit}>
