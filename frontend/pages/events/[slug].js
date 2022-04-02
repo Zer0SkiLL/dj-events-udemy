@@ -14,19 +14,13 @@ import { useRouter } from 'next/router';
 export default function EventsDetailPage({ evt, id }) {
     const router = useRouter();
 
-    console.log(evt, id);
-
     const deleteEvent = async (e) => {
         if (confirm('Are you sure?')) {
             const res = await fetch(`${API_URL}/api/events/${id}`, {
                 method: 'DELETE',
             });
 
-            console.log(res);
-
             const data = await res.json();
-
-            console.log(data);
 
             if (!res.ok) {
                 toast.error(`Error:${data.error.message}`);

@@ -47,7 +47,10 @@ export default function AddEventPage() {
                 toast.error(
                     'Something went wrong with posting to strapi. detail in console'
                 );
-                console.log(res.statusText);
+                console.log(
+                    res.statusText,
+                    'maybe use a unique name for your event'
+                );
             } else {
                 const data = await res.json();
                 const evt = data.data.attributes;
