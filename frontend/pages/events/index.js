@@ -34,8 +34,6 @@ export async function getServerSideProps({ query: { page = 1 } }) {
 
     const events = json.data;
 
-    console.log(json);
-
     return {
         props: {
             events,

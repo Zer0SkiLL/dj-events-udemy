@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import Link from 'next/link';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaImage } from 'react-icons/fa';
 
@@ -97,8 +97,6 @@ export default function EditEventPage({ evt, id }) {
                 {isLoading && <Loading></Loading>}
                 <Link href="/events">Go Back</Link>
                 <h1>Edit Event</h1>
-                <ToastContainer position="bottom-right"></ToastContainer>
-
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.grid}>
                         <div>

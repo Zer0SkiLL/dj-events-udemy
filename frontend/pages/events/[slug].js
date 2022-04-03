@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '@/components/Layout';
 import { API_URL } from '@/config/index';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
@@ -53,7 +53,6 @@ export default function EventsDetailPage({ evt, id }) {
                         {evt.time}
                     </span>
                     <h1>{evt.name}</h1>
-                    <ToastContainer position="bottom-right"></ToastContainer>
                     {evt.image.data && (
                         <div className={styles.image}>
                             <Image

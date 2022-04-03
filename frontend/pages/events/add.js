@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { API_URL } from '@/config/index';
@@ -70,8 +70,6 @@ export default function AddEventPage() {
             <Layout title="Add New Event">
                 <Link href="/events">Go Back</Link>
                 <h1>Add Event</h1>
-                <ToastContainer position="bottom-right"></ToastContainer>
-
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.grid}>
                         <div>
