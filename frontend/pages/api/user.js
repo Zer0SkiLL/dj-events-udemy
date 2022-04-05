@@ -25,15 +25,16 @@ export default async (req, res) => {
             .then((response) => {
                 // Handle success.
                 console.log('WELL DONE!');
-                console.log(response);
+                console.log(response.data);
 
-                res.status(200).json({ user: response.data });
+                res.status(200).send({ user: response.data });
             })
             .catch((error) => {
                 // Handle error
-                res.status(error.response.status).json({
-                    message: error.response.data.error.message,
-                });
+                console.log(error);
+                res.status(error.response.data.error.status).send(
+                    error.response.data.error
+                );
             });
 
         // const strapiRes = await fetch(`${API_URL}/users/me`, {

@@ -19,31 +19,102 @@ export const AuthProvider = ({ children }) => {
 
     // register user
     const register = async (user) => {
-        console.log(user);
+        const res = await axios
+            .post(`${NEXT_URL}/api/register`, {
+                user,
+            })
+            .then((response) => {
+                setUser(response.data.user);
+                router.push('/account/dashboard');
+            })
+            .catch((error) => {
+                console.log(error);
+                if (
+                    error.response.data.details.errors &&
+                    error.response.data.details.errors.length > 0
+                ) {
+                    error.response.data.details.errors.map((m) => {
+                        toast.error(m.message);
+                    });
+                } else {
+                    toast.error(error.response.data.message);
+                }
+            });
+
+        // const res = await fetch(`${NEXT_URL}/api/register`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         user,
+        //     }),
+        // });
+        // const data = await res.json();
+
+        // console.log(res, data);
+
+        // if (res.ok) {
+        //     setUser(data.user);
+        //     router.push('/account/dashboard');
+        // } else {
+        //     console.log(data, data.details.errors.length > 0);
+        //     if (data.details.errors.length > 0) {
+        //         data.details.errors.map((m) => {
+        //             toast.error(m.message);
+        //         });
+        //     } else {
+        //         toast.error(data.message);
+        //     }
+        // }
     };
 
     // login user
     const login = async ({ email: identifier, password }) => {
-        const res = await fetch(`${NEXT_URL}/api/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        const res = await axios
+            .post(`${NEXT_URL}/api/login`, {
                 identifier,
                 password,
-            }),
-        });
-        const data = await res.json();
+            })
+            .then((response) => {
+                console.log(response);
+                setUser(response.data.user);
+                router.push('/account/dashboard');
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                if (
+                    error.response.data.details.errors &&
+                    error.response.data.details.errors.length > 0
+                ) {
+                    error.response.data.details.errors.map((m) => {
+                        toast.error(m.message);
+                    });
+                } else {
+                    toast.error(error.response.data.message);
+                }
+            });
 
-        console.log(res, data);
+        // const res = await fetch(`${NEXT_URL}/api/login`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         identifier,
+        //         password,
+        //     }),
+        // });
+        // const data = await res.json();
 
-        if (res.ok) {
-            setUser(data.user);
-            router.push('/account/dashboard');
-        } else {
-            toast.error(data.message);
-        }
+        // console.log(res, data);
+
+        // if (res.ok) {
+        //     setUser(data.user);
+        //     router.push('/account/dashboard');
+        // } else {
+        //     toast.error(data.message);
+        // }
     };
 
     // logout user

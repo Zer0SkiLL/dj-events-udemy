@@ -7,11 +7,12 @@ import cookie from 'cookie';
 /* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
 export default async (req, res) => {
     if (req.method === 'POST') {
-        const { identifier, password } = req.body;
+        const { username, email, password } = req.body.user;
 
         const strapiRes = axios
-            .post(`${API_URL}/api/auth/local`, {
-                identifier,
+            .post(`${API_URL}/api/auth/local/register`, {
+                username,
+                email,
                 password,
             })
             .then((response) => {
@@ -31,11 +32,12 @@ export default async (req, res) => {
                     })
                 );
 
+                console.log(response.data.user);
                 res.status(200).send({ user: response.data.user });
             })
             .catch((error) => {
                 // Handle error
-                console.log(error.response.data);
+                console.log(error.response);
                 res.status(error.response.data.error.status).send(
                     error.response.data.error
                 );
