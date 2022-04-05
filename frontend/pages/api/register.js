@@ -17,10 +17,6 @@ export default async (req, res) => {
             })
             .then((response) => {
                 // Handle success.
-                console.log('WELL DONE!');
-                console.log('USER PROFILE', response.data.user);
-                console.log('USER TOKEN', response.data.jwt);
-
                 res.setHeader(
                     'Set-Cookie',
                     cookie.serialize('token', response.data.jwt, {
@@ -31,13 +27,10 @@ export default async (req, res) => {
                         path: '/',
                     })
                 );
-
-                console.log(response.data.user);
                 res.status(200).send({ user: response.data.user });
             })
             .catch((error) => {
                 // Handle error
-                console.log(error.response);
                 res.status(error.response.data.error.status).send(
                     error.response.data.error
                 );

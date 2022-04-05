@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }) => {
                 router.push('/account/dashboard');
             })
             .catch((error) => {
-                console.log(error);
                 if (
                     error.response.data.details.errors &&
                     error.response.data.details.errors.length > 0
@@ -77,12 +76,10 @@ export const AuthProvider = ({ children }) => {
                 password,
             })
             .then((response) => {
-                console.log(response);
                 setUser(response.data.user);
                 router.push('/account/dashboard');
             })
             .catch((error) => {
-                console.log(error.response.data);
                 if (
                     error.response.data.details.errors &&
                     error.response.data.details.errors.length > 0

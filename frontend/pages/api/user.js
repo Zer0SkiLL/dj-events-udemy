@@ -14,8 +14,6 @@ export default async (req, res) => {
 
         const { token } = cookie.parse(req.headers.cookie);
 
-        console.log(token);
-
         const config = {
             headers: { Authorization: `Bearer ${token}` },
         };
@@ -24,14 +22,10 @@ export default async (req, res) => {
             .get(`${API_URL}/api/users/me`, config)
             .then((response) => {
                 // Handle success.
-                console.log('WELL DONE!');
-                console.log(response.data);
-
                 res.status(200).send({ user: response.data });
             })
             .catch((error) => {
                 // Handle error
-                console.log(error);
                 res.status(error.response.data.error.status).send(
                     error.response.data.error
                 );
