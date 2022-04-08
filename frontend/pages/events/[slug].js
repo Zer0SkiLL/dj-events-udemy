@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '@/components/Layout';
+import EventMap from '@/components/EventMap';
 import { API_URL } from '@/config/index';
 
 import { toast } from 'react-toastify';
@@ -14,40 +15,10 @@ import { useRouter } from 'next/router';
 export default function EventsDetailPage({ evt, id }) {
     const router = useRouter();
 
-    const deleteEvent = async (e) => {
-        if (confirm('Are you sure?')) {
-            const res = await fetch(`${API_URL}/api/events/${id}`, {
-                method: 'DELETE',
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                toast.error(`Error:${data.error.message}`);
-            } else {
-                router.push('/events');
-            }
-        }
-    };
     return (
         <div>
             <Layout>
                 <div className={styles.event}>
-                    <div className={styles.controls}>
-                        <Link href={`/events/edit/${id}`}>
-                            <a>
-                                <FaPencilAlt></FaPencilAlt>Edit Event
-                            </a>
-                        </Link>
-                        <a
-                            href="#"
-                            className={styles.delete}
-                            onClick={deleteEvent}
-                        >
-                            <FaTimes></FaTimes> Delete Event
-                        </a>
-                    </div>
-
                     <span>
                         {new Date(evt.date).toLocaleDateString('de-CH')} at{' '}
                         {evt.time}
@@ -72,6 +43,8 @@ export default function EventsDetailPage({ evt, id }) {
                     <p>{evt.description}</p>
                     <h3>Venue: {evt.venue}</h3>
                     <p>{evt.address}</p>
+
+                    <EventMap evt={evt} />
 
                     <Link href="/events">
                         <a className={styles.back}>{'<'} Go Back</a>

@@ -5,7 +5,7 @@ import { API_URL } from '../config';
 
 import Loading from '@/components/Loading';
 
-export default function ImageUpload({ evtId, imageUploaded }) {
+export default function ImageUpload({ evtId, imageUploaded, token }) {
     const [image, setImage] = useState(null);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +23,9 @@ export default function ImageUpload({ evtId, imageUploaded }) {
 
         const res = await fetch(`${API_URL}/api/upload`, {
             method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
             body: formData,
         });
 

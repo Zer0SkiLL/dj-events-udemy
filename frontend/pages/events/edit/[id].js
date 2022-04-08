@@ -14,8 +14,9 @@ import Loading from '@/components/Loading';
 
 import styles from '@/styles/Form.module.css';
 import Image from 'next/image';
+import { parseCookies } from '@/helpers/index';
 
-export default function EditEventPage({ evt, id }) {
+export default function EditEventPage({ evt, id, token }) {
     const [values, setValues] = useState({
         name: evt.name,
         performers: evt.performers,
@@ -49,22 +50,32 @@ export default function EditEventPage({ evt, id }) {
             }
         }
         if (valid) {
+            console.log(JSON.stringify({ data: values }));
             setIsLoading(true);
 
             const res = await fetch(`${API_URL}/api/events/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ data: values }),
             });
 
+            console.log(res);
+
             if (!res.ok) {
+                if (res.status === 403 || res.status === 401) {
+                    setIsLoading(false);
+                    toast.error('Aunauthorized');
+                    return;
+                }
                 setIsLoading(false);
                 toast.error(
                     'Something went wrong with posting to strapi. detail in console'
                 );
                 console.log(res.statusText);
+                return;
             } else {
                 setIsLoading(false);
                 const data = await res.json();
@@ -201,6 +212,7 @@ export default function EditEventPage({ evt, id }) {
                     <ImageUpload
                         evtId={id}
                         imageUploaded={imageUploaded}
+                        token={token}
                     ></ImageUpload>
                 </Modal>
             </Layout>
@@ -208,15 +220,18 @@ export default function EditEventPage({ evt, id }) {
     );
 }
 
-export async function getServerSideProps({ params: { id } }) {
+export async function getServerSideProps({ params: { id }, req }) {
     const res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
     const json = await res.json();
     const evt = json.data;
+
+    const { token } = parseCookies(req);
 
     return {
         props: {
             evt: evt.attributes,
             id: evt.id,
+            token,
         },
     };
 }

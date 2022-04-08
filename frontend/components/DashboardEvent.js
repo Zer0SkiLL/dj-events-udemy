@@ -13,7 +13,7 @@ export default function DashboardEvent({ evt, handleDelete }) {
                         <a>{evt.name}</a>
                     </Link>
                 </h4>
-                <Link href={`/events/edit/${evt.slug}`}>
+                <Link href={`/events/edit/${evt.id}`}>
                     <a className={styles.edit}>
                         <FaPencilAlt /> <span>Edit Event</span>
                     </a>

@@ -3,13 +3,14 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { parseCookies } from '@/helpers/index';
 
 import { API_URL } from '@/config/index';
 import Layout from '@/components/Layout';
 
 import styles from '@/styles/Form.module.css';
 
-export default function AddEventPage() {
+export default function AddEventPage({ token }) {
     const [values, setValues] = useState({
         name: '',
         performers: '',
@@ -39,21 +40,26 @@ export default function AddEventPage() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ data: values }),
             });
 
             if (!res.ok) {
+                if (res.status === 401 || res.status === 403) {
+                    toast.error('No Token included');
+                    return;
+                }
                 toast.error(
                     'Something went wrong with posting to strapi. detail in console'
                 );
+
                 console.log(
                     res.statusText,
                     'maybe use a unique name for your event'
                 );
             } else {
-                const data = await res.json();
-                const evt = data.data.attributes;
+                const evt = await res.json();
 
                 router.push(`/events/${evt.slug}`);
             }
@@ -150,4 +156,14 @@ export default function AddEventPage() {
             </Layout>
         </div>
     );
+}
+
+export async function getServerSideProps({ req }) {
+    const { token } = parseCookies(req);
+
+    return {
+        props: {
+            token,
+        },
+    };
 }

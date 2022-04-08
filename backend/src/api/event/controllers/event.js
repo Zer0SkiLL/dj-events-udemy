@@ -6,19 +6,19 @@
 
 const { createCoreController } = require("@strapi/strapi").factories;
 
+const { parseMultipartData, sanitizeEntity } = require("strapi-utils");
+
 module.exports = createCoreController("api::event.event", ({ strapi }) => ({
   // Create Event with linked user
   async create(ctx) {
     let entity;
-    if (ctx.is("multipart")) {
-      const { data, files } = parseMultipartData(ctx);
-      data.user = ctx.state.user.id;
-      entity = await strapi.services.event.create(data, { files });
-    } else {
-      ctx.request.body.user = ctx.state.user.id;
-      entity = await strapi.services.event.create(ctx.request.body);
-    }
-    return sanitizeEntity(entity, { model: strapi.models.event });
+
+    ctx.request.body.data.user = ctx.state.user;
+    entity = await strapi.service("api::event.event").create(ctx.request.body);
+
+    // return entity;
+    const res = await this.sanitizeOutput(entity, ctx);
+    return res;
   },
 
   // update user event
@@ -26,27 +26,25 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
     const { id } = ctx.params;
 
     let entity;
+
     const event = await strapi.db.query("api::event.event").findOne({
+      // uid syntax: 'api::api-name.content-type-name'
       where: {
-        user: { id: ctx.state.user.id },
         id: ctx.params.id,
+        user: { id: ctx.state.user.id },
       },
+      populate: { user: true },
     });
 
     if (!event) {
       return ctx.unauthorized(`You can't update this entry`);
     }
 
-    if (ctx.is("multipart")) {
-      const { data, files } = parseMultipartData(ctx);
-      entity = await strapi.services.event.update({ id }, data, {
-        files,
-      });
-    } else {
-      entity = await strapi.services.event.update({ id }, ctx.request.body);
-    }
+    entity = await super.update(ctx);
 
-    return sanitizeEntity(entity, { model: strapi.models.event });
+    // return entity;
+    const res = await this.sanitizeOutput(entity, ctx);
+    return res;
   },
 
   // Delete user event
@@ -55,20 +53,25 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
 
     let entity;
 
-    const [event] = await strapi.services.event.findOne({
+    const event = await strapi.db.query("api::event.event").findOne({
+      // uid syntax: 'api::api-name.content-type-name'
       where: {
-        user: { id: ctx.state.user.id },
         id: ctx.params.id,
+        user: { id: ctx.state.user.id },
       },
+      populate: { user: true },
     });
+
+    console.log(event);
 
     if (!event) {
       return ctx.unauthorized(`You can't update this entry`);
     }
 
-    entity = await strapi.services.event.delete({ id });
+    entity = await super.delete(ctx);
 
-    return sanitizeEntity(entity, { model: strapi.models.event });
+    const res = await this.sanitizeOutput(entity, ctx);
+    return res;
   },
 
   // Get logged in users
