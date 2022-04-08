@@ -1,4 +1,10 @@
 module.exports = ({ env }) => ({
   url: env("HEROKU_URL"),
-  port: env.int("PORT", 1337),
+  proxy: true,
+  app: {
+    keys: env.array("APP_KEYS", [
+      "DATABASE_URL",
+      "HEROKU_POSTGRESQL_MAROON_URL",
+    ]),
+  },
 });
