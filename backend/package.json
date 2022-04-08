@@ -4,12 +4,10 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
-    "dev": "react-scripts start",
-    "start": "serve -s build",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "heroku-postbuild": "npm run build"
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
   },
   "dependencies": {
     "@strapi/plugin-i18n": "4.1.6",
